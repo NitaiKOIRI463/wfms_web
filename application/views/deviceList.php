@@ -12,7 +12,7 @@
     height: 25px!important;
   }
 </style>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="page-header">
@@ -47,7 +47,7 @@
                   </a>
 
                   <a href="#" class="btn btn-primary btn-icon-text" data-toggle="modal" data-target="#exampleModal" style="float: right;margin-left: 1%;margin-top: 1%;">
-                    <i class="mdi mdi-library-plus"></i> Add Device 
+                    <i class="mdi mdi-library-plus"></i> Assign Device 
                   </a>
                 </div>
               </div>
@@ -82,19 +82,11 @@
                           <td><?php echo $list['imei_no']; ?></td>
                           <td><?php echo $list['city']; ?></td>
                           <td><?php echo $list['address']; ?></td>
-                          <td><?php echo $list['date_of_installation']; ?></td>
+                          <td><?php echo date('d-m-Y',strtotime($list['date_of_installation'])); ?></td>
                           <td>
                         <div class="row">
-                          <a href="<?php echo base_url('Device/DeviceProfile'); ?>" class="icon icon-box-info " style="margin-right: 5%;">
+                          <a href="<?php echo base_url('Device/DeviceProfile/').$list['device_id']; ?>" class="icon icon-box-info " style="margin-right: 5%;">
                           <span class="mdi mdi-eye"></span>
-                          </a>
-
-                          <a href="#" class="icon icon-box-success " style="margin-right: 5%;">
-                            <span class="mdi mdi-grease-pencil"></span>
-                          </a>
-
-                          <a href="#" class="icon icon-box-danger ">
-                            <span class="mdi mdi-block-helper"></span>
                           </a>
                         </div>
                     </td>
@@ -122,109 +114,172 @@
   <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Device</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Install Device</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="content-area">
-          <form method="POST" action="#" enctype="multipart/form-data">
+          <form method="POST" action="<?php echo base_url("Device/AssignDeviceSubmit"); ?>" enctype="multipart/form-data">
             <div class="col-lg-12">
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Company Name</label>
-                    <select name="company_name" id="company_name" class="form-control" required>
-                      <option value="">---select---</option>
+                    <select style="color:white;" name="company_code" id="company_code" class="form-control" required>
+                      <?php 
+                      if(!empty($company_list))
+                      {
+                        foreach($company_list as $key=>$value)
+                        {
+                          ?>
+                          <option value="<?php echo $value['company_code']; ?>"><?php echo $value['company_name']; ?></option>
+                          <?php
+                        }
+                      }
+                      ?>
+                      
                     </select>
                   </div>
                 </div>
-
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>IMEI No.</label>
+                    <select style="color:white;" name="imei_no" onchange="getimeiDetails(this.value)" id="imei_no" class="form-control" required>
+                      <option value="">Select Imei</option>
+                      <?php 
+                      if(!empty($master_list))
+                      {
+                        foreach($master_list as $key=>$value)
+                        {
+                          ?>
+                          <option value="<?php echo $value['imei_no'].'|'.$value['device_type'].'|'.$value['device_id']; ?>"><?php echo $value['imei_no']; ?></option>
+                          <?php
+                        }
+                      }
+                      ?>
+                      
+                    </select>
+                    <input type="hidden" id="device_id" name="device_id" required="required">
+                  </div>
+                </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Device Type</label>
-                    <select name="device_type" id="device_type" class="form-control" required>
-                      <option value="">---select---</option>
-                    </select>
+                    <input style="color:black;" type="text" disabled="disabled" name="device_type" id="device_type" class="form-control" required>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Device Id</label>
-                    <select name="device_id" id="device_id" class="form-control" required>
-                      <option value="">---select---</option>
-                    </select>
+                    <input style="color:black;" type="text" disabled="disabled" class="form-control" name="lbl_device_id" id="lbl_device_id">
                   </div>
                 </div>
-
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label>IMEI No.</label>
-                    <select name="imei_no" id="imei_no" class="form-control" required disabled>
-                      <option value="">---select---</option>
-                    </select>
-                    <!-- <input type="number" name="imei_no" id="imei_no" class="form-control" required disabled> -->
-                  </div>
-                </div>
-
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>State</label>
-                    <input type="text" name="state" id="state" class="form-control" required placeholder="Enter state name">
+                    <select style="color:white;" class="form-control" name="state" id="state">
+                      <?php 
+                        if(!empty($state_list))
+                        {
+                          foreach($state_list as $key=>$value)
+                          {
+                            ?>
+                            <option value="<?php echo $value['state_code']; ?>"><?php echo $value['state_name']; ?></option>
+                            <?php
+                          }
+                        }
+                        ?>
+                    </select>
                   </div>
                 </div>
-
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>City</label>
-                    <input type="text" name="city" id="city" class="form-control" required placeholder="Enter city name">
+                    <input style="color:white;" type="text" name="city" id="city" class="form-control" required placeholder="Enter city name">
                   </div>
                 </div>
-
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Lattitude</label>
-                    <input type="text" step="any" name="lattitude" id="lattitude" class="form-control" required placeholder="Enter lattitude">
+                    <input style="color:white;" type="text" step="any" name="latitude" id="latitude" class="form-control" required placeholder="Enter latitude">
                   </div>
                 </div>
-
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Longitude</label>
-                    <input type="text" step="any" name="longitude" id="longitude" class="form-control" required placeholder="Enter longitude">
+                    <input style="color:white;" type="text" step="any" name="longitude" id="longitude" class="form-control" required placeholder="Enter longitude">
                   </div>
                 </div>
-
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label>Date Of Regst.</label>
-                    <input type="date" name="date_0f_regs" id="date_0f_regs" class="form-control" required>
+                    <label>Date Of Installation.</label>
+                    <input style="color:white;" type="date" name="installation_date" id="installation_date" class="form-control" required>
                   </div>
                 </div>
-
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Address</label>
-                    <textarea class="form-control" name="address" id="address" required cols="2"></textarea>
+                    <textarea style="color:white;" class="form-control" name="address" id="address" required cols="2"></textarea>
                   </div>
                 </div>
 
               </div>
             </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
           </form>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </div>
+      
     </div>
   </div>
 </div>
 
+<?php 
+    if($this->session->flashdata('success')!=null)
+    {
+        ?>
+        <script type="text/javascript">
+            swal('success','<?php echo $this->session->flashdata("success") ?>','success');
+        </script>
+        <?php
+        $this->session->set_flashdata('success',null);
+    }
+    if($this->session->flashdata('error')!=null)
+    {
+        ?>
+        <script type="text/javascript">
+            swal('error','<?php echo $this->session->flashdata("error") ?>','error');
+        </script>
+        <?php
+        $this->session->set_flashdata('error',null);
+    }
+?>
+
+
+<style type="text/css">
+  input{
+    color: white;
+    background: black;
+  }
+</style>
 <script type="text/javascript">
+
+  function getimeiDetails(value)
+  {
+    let imei_no = value.split('|')[0];
+    let device_type = value.split('|')[1];
+    let device_id = value.split('|')[2];
+    $('#device_type').val(device_type);
+    $('#device_id').val(device_id);
+    $('#lbl_device_id').val(device_id);
+    console.log();
+  }
     function export_report()
     {
         $(function() {

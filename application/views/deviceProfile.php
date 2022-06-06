@@ -1,4 +1,14 @@
+<link rel="stylesheet" href="http://github.hubspot.com/odometer/themes/odometer-theme-car.css" />
+<script src="http://github.hubspot.com/odometer/odometer.js"></script>
+
 <style type="text/css">
+.odometer {
+    font-size: 2.8rem;
+    height: 100%;
+}
+.odometer-inside{
+  padding-top: 15%;
+}
   #map {
   height: 400px;
   /* The height is 400 pixels */
@@ -171,12 +181,13 @@
           </div>
 
           <div class="col-md-4 google-map">
-            <div id="map"></div>
+            <div id="map" style="border-radius: 10px;"></div>
           </div>
           <div style="text-center:center;" class="col-md-4">
-            <div class="operated-area">
+            <div id="odometer" class="odometer" style="width: 476px;margin-left: 12%;">12345678900</div>
+            <!-- <div class="operated-area">
               <div class="row">
-                <div class="col-md-12 meter-box">
+                <div class="col-md-6 meter-box">
                   <div class="meter-list">
                     <ul>
                       <li class="mtr-7">0</li>
@@ -190,18 +201,19 @@
                     </ul>
                   </div>
                 </div>
-                <div class="col-md-12 flow-box">
-                  <div  id="chart_div"></div>
-                </div>
+                
               </div>
-            </div>
+            </div> -->
           </div>
-          <div class="col-md-4">
+          <div style="text-center:center;" class="col-md-4">
+           <div  id="chart_div"></div>
+          </div>
+          <!-- <div class="col-md-4">
             <div style="height:200px;padding: 60px;text-align: center;" class="operated-area">
               <label style="color: aquamarine;font-size: 1.2rem;">Last Operated</label><br>
               <span style="color: thistle;"> <?php echo date('d-m-Y H:i:s',strtotime($device_status[0]['last_operated'])); ?></span>
             </div>
-          </div>
+          </div> -->
 
         </div>
       </div>
@@ -314,13 +326,13 @@
    }
    .meter-box
    {
-    height: 100px;
+    height: 200px;
     /*background: red;*/
     text-align: center;
    }
    .flow-box
    {
-    height: 100px;
+    height: 200px;
     /*background: yellow;*/
    }
    .meter-list{
@@ -347,7 +359,7 @@
     color: black;
    }
    #chart_div{
-    margin-left: 35%;
+    margin-left: 48%;
    }
 </style>
 <script type="text/javascript">
@@ -449,11 +461,11 @@ function drawChart() {
 
       var data = google.visualization.arrayToDataTable([
         ['Label', 'Value'],
-        ['FLow Meter', flow_rate],
+        ['Flow Rate', flow_rate],
       ]);
 
       var options = {
-        width: 100, height: 100,
+        width: 200, height: 200,
         redFrom: 0, redTo: 10,
         yellowFrom:11, yellowTo: 100,
         minorTicks: 2
@@ -571,6 +583,10 @@ function getDeviceProfileData()
     }
   })
 }
+
+setTimeout(function(){
+    odometer.innerHTML = 456;
+}, 1000);
 
 function export_devices() 
 {
