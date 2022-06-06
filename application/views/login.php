@@ -62,10 +62,10 @@
                             <div class="card col-lg-5 mx-auto">
                               <div class="card-body px-5 py-5">
                                 <h3 class="card-title text-left mb-3">Login</h3>
-                                <form name="LoginForm" method="POST" action="<?php echo base_url('Dashboard'); ?>">
+                                <form name="LoginForm" method="POST" action="<?php echo base_url('Signin/doLogin'); ?>">
                                   <div class="form-group">
-                                    <label>Username </label>
-                                    <input type="text" class="form-control" name="username" id="username" required placeholder="Enter username">
+                                    <label>Emial Id </label>
+                                    <input type="text" class="form-control" name="email_id" id="email_id" required placeholder="Enter email">
                                   </div>
                                   <div class="form-group">
                                     <label>Password</label>
@@ -102,6 +102,19 @@
         </div>
       </div>
     </div>
+
+    <?php 
+        if($this->session->flashdata('error')!=null)
+        {
+            ?>
+            <script type="text/javascript">
+                swal('error','<?php echo $this->session->flashdata("error") ?>','error');
+            </script>
+            <?php
+            $this->session->set_flashdata('error',null);
+        }
+    ?>
+
 
     <!-- container-scroller -->
     <!-- plugins:js -->

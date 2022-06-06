@@ -5,7 +5,7 @@ class MY_Controller extends CI_Controller
   {
     parent::__construct();
     if ($page = $this->uri->segment(1) != "Signin") {
-      if (!isset($_SESSION['id'])) {
+      if (!isset($_SESSION['user_id'])) {
         redirect("Signin");
       }
     }
@@ -31,7 +31,7 @@ class MY_Controller extends CI_Controller
 
     $response = curl_exec($curl);
 	// echo '<pre>';
-     // print_r($response);die;
+ //     print_r($response);die;
     $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
     // if ($httpCode == 200) {
