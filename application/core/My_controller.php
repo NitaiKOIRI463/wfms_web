@@ -8,7 +8,7 @@ class MY_Controller extends CI_Controller
     //   if (!isset($_SESSION['id'])) {
     //     redirect("Signin");
     //   }
-    }
+    // }
   }
   public function CallAPI($api, $data, $method) {
     $curl = curl_init();
