@@ -59,7 +59,7 @@
                     <span>Date Of Installetion :</span>
                   </div>
                   <div class="col-md-3 pt-3">
-                    <span><?php echo date('d-m-Y',strtotime($device_details[0]['imei_no'])); ?></span>
+                    <span><?php echo date('d-m-Y',strtotime($device_details[0]['date_of_installation'])); ?></span>
                   </div>
 
                   <div class="col-md-3 pt-3">
@@ -199,7 +199,7 @@
           <div class="col-md-4">
             <div style="height:200px;padding: 60px;text-align: center;" class="operated-area">
               <label style="color: aquamarine;font-size: 1.2rem;">Last Operated</label><br>
-              <span style="color: thistle;"> 04-04-2022 12:12:21</span>
+              <span style="color: thistle;"> <?php echo date('d-m-Y H:i:s',strtotime($device_status[0]['last_operated'])); ?></span>
             </div>
           </div>
 
@@ -215,20 +215,20 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label>From Date</label>
-                <input type="date" name="from_date" id="from_date" class="form-control" value="<?php echo date("Y-m-d"); ?>">
+                <input type="date" name="from_date" onchange="getDeviceProfileData()" id="from_date" class="form-control" value="<?php echo date("Y-m-d",strtotime('-5 days')); ?>">
               </div>
             </div>
 
             <div class="col-md-4">
               <div class="form-group">
                 <label>To Date</label>
-                <input type="date" name="to_date" id="to_date" class="form-control" value="<?php echo date("Y-m-d"); ?>">
+                <input type="date" name="to_date"  onchange="getDeviceProfileData()" id="to_date" class="form-control" value="<?php echo date("Y-m-d"); ?>">
               </div>
             </div>
 
             <div class="col-md-4">
               <div class="form-group">
-                <a href="#" class="btn btn-warning btn-icon-text" style="float: right;margin-top: 9%;">
+                <a href="#" class="btn btn-warning btn-icon-text" onclick="export_devices()" style="float: right;margin-top: 9%;">
                       <i class="mdi mdi-file-excel"></i> Export 
                   </a>
               </div>
@@ -236,8 +236,14 @@
 
             <div class="col-lg-12">
               <div class="table-responsive">
-                <table class="table table-dark" style="text-align: center;">
+                <table id="tbl_export" class="table table-dark" style="text-align: center;">
                   <thead>
+                    <tr>
+                      <th colspan="5"><h1 style="text-align:center;">Iotas Solutions Pvt. Ltd</h1></th>
+                    </tr>
+                    <tr>
+                      <th colspan="5"><h3 style="text-align:center;">Device Mis Report as on <?php echo date('d-m-Y H:i:s'); ?></h3></th>
+                    </tr>
                     <tr>
                       <th colspan="3">
                           <span> Flow MIS</span>
@@ -255,7 +261,7 @@
                       <th>Flow Rate</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="tbl_data">
                     <tr>
                       <td>23-11-2022 12:12:12</td>
                       <td>54545</td>
@@ -300,6 +306,7 @@
     </div>
 
   </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <style type="text/css">
    #map{
       height: 200px;
@@ -344,58 +351,60 @@
    }
 </style>
 <script type="text/javascript">
-  var xValues = [50,60,70,80,90,100,110,120,130,140,150];
-  var yValues = [7,8,8,9,9,9,10,11,14,14,15];
+  
+  function graphData(flowrateX,flowrateY,flowtotalX,flowtotalY)
+  {
+    var xValues = flowtotalX;
+    var yValues = flowtotalY;
 
-  new Chart("myChart", {
-    type: "line",
-    data: {
-      labels: xValues,
-      datasets: [{
-        fill: false,
-        lineTension: 0,
-        backgroundColor: "rgba(0,0,255,1.0)",
-        borderColor: "rgba(0,0,255,0.1)",
-        data: yValues
-      }]
-    },
-    options: {
-      legend: {display: false},
-      scales: {
-        yAxes: [{ticks: {min: 6, max:16}}],
+    new Chart("myChart", {
+      type: "line",
+      data: {
+        labels: xValues,
+        datasets: [{
+          fill: false,
+          lineTension: 0,
+          backgroundColor: "rgba(0,0,255,1.0)",
+          borderColor: "rgba(0,0,255,0.1)",
+          data: yValues
+        }]
+      },
+      options: {
+        legend: {display: false},
+        scales: {
+          // yAxes: [{ticks: {min: 6, max:16}}],
+        }
       }
-    }
-  });
-
-  var xValues = [50,60,70,80,90,100,110,120,130,140,150];
-  var yValues = [7,8,8,9,9,9,10,11,14,14,15];
-
-  new Chart("flowRate", {
-    type: "line",
-    data: {
-      labels: xValues,
-      datasets: [{
-        fill: false,
-        lineTension: 0,
-        backgroundColor: "rgba(0,0,255,1.0)",
-        borderColor: "rgba(0,0,255,0.1)",
-        data: yValues
-      }]
-    },
-    options: {
-      legend: {display: false},
-      scales: {
-        yAxes: [{ticks: {min: 6, max:16}}],
+    });
+    var xValues = flowrateX;
+    var yValues = flowrateY;
+    new Chart("flowRate", {
+      type: "line",
+      data: {
+        labels: xValues,
+        datasets: [{
+          fill: false,
+          lineTension: 0,
+          backgroundColor: "rgba(0,0,255,1.0)",
+          borderColor: "rgba(0,0,255,0.1)",
+          data: yValues
+        }]
+      },
+      options: {
+        legend: {display: false},
+        scales: {
+          // yAxes: [{ticks: {min: 6, max:16}}],
+        }
       }
-    }
-  });
+    });
+  }
 
 </script>
 
 <script type="text/javascript">
    function initMap() {
-      c_lat = parseFloat(23.344101);
-      c_lng = parseFloat(85.309563);
+      c_lat = parseFloat('<?php echo $device_details[0]['latitude']; ?>');
+      c_lng = parseFloat('<?php echo $device_details[0]['longitude']; ?>');
       directionsService = new google.maps.DirectionsService;
       directionsDisplay = new google.maps.DirectionsRenderer;
       map = new google.maps.Map(document.getElementById('map'), {
@@ -406,35 +415,8 @@
          }
       });
       directionsDisplay.setMap(map);
-      // setLocation(23.344101,85.309563);
-      getGeoData();
+      setLocation(c_lat,c_lng);
 
-}
-
-function getGeoData()
-{
-   $.ajax({
-      type: 'POST',
-      url: '<?php echo base_url(); ?>GeoLocationReport/getGeoLocations',
-      data: {},
-      succes:function(res)
-      {
-         c_lat = parseFloat(23.344101);
-         c_lng = parseFloat(85.309563);
-         directionsService = new google.maps.DirectionsService;
-         directionsDisplay = new google.maps.DirectionsRenderer;
-         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 13,
-            center: {
-               lat: c_lat,
-               lng: c_lng
-            }
-         });
-         directionsDisplay.setMap(map);
-         setLocation(24.3101,85.3563);
-         console.log(res);
-      }
-   });
 }
 
 function setLocation(lat,lng)
@@ -510,6 +492,103 @@ function drawChart() {
     }
     // console.log();
   }
+
+function getXarray(flowrateY)
+{
+  let max = Math.max(...flowrateY);
+  let finalarray = [];
+  if(max<=10)
+  {
+    for(let i=1;i<=max;i++)
+    {
+      finalarray.push(i);
+    }
+  }else if(max>10 && max<=100)
+  {
+    for(let i=1;i<=max;i+=10)
+    {
+      finalarray.push(i);
+    }
+  }else if(max>100 && max<=500)
+  {
+    for(let i=1;i<=max;i+=50)
+    {
+      finalarray.push(i);
+    }
+  }else
+  {
+    for(let i=1;i<=max;i+=100)
+    {
+      finalarray.push(i);
+    }
+  }
+  return finalarray;
+}
+getDeviceProfileData();
+function getDeviceProfileData()
+{
+  let from_date = $('#from_date').val();
+  let to_date = $('#to_date').val();
+  let device_id = '<?php echo $this->uri->segment(3); ?>';
+  $('#tbl_data').html('<tr><td colspan="3" style="text-align:center;">Proccessing Please Wait..</td><td style="text-align:center;" colspan="2">Proccessing Please Wait..</td></tr>');
+  $.ajax({
+    type:'POST',
+    url:'<?php  echo base_url(); ?>Device/DeviceProfileFetchData',
+    data:{from_date: from_date,to_date: to_date,device_id: device_id},
+    success:function(res)
+    {
+      res = JSON.parse(res);
+      let flow_details = res.data.flow_details;
+      let flow_rate_details = res.data.flow_rate_details;
+      $('#tbl_data').html('');
+      if(flow_details.length>0)
+      {
+        
+        let flowrateY  = [];
+        let flowtotalY = [];
+
+        $.each(flow_details,function(i,v){
+
+          flowrateY.push(parseFloat(flow_rate_details[i].flow_rate));
+          flowtotalY.push(parseFloat(flow_details[i].flow_measured));
+          $('#tbl_data').append('<tr>'+
+                                '<td>'+flow_details[i].date_time+'</td>'+
+                                '<td>'+flow_details[i].total_flow+'</td>'+
+                                '<td>'+flow_details[i].flow_measured+'</td>'+
+                                '<td>'+flow_rate_details[i].date_time+'</td>'+
+                                '<td>'+flow_rate_details[i].flow_rate+'</td>'+
+                              '</tr>');
+        });
+        // console.log(getXarray(flowrateY),flowrateY,getXarray(flowtotalY),flowtotalY);
+        graphData(getXarray(flowrateY),flowrateY,getXarray(flowtotalY),flowtotalY);
+      }else
+      {
+        graphData([],[],[],[]);
+        $('#tbl_data').html('<tr><td colspan="3" style="text-align:center;">No Record</td><td style="text-align:center;" colspan="2">No Record</td></tr>');
+      } 
+      
+      
+    }
+  })
+}
+
+function export_devices() 
+{
+    $(function() {
+
+    var a = document.createElement('a');
+    var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
+    var table_html = $('#tbl_export')[0].outerHTML;
+    table_html = table_html.replace(/<tfoot[\s\S.]*tfoot>/gmi, '');
+    var css_html = '<style> .abc {display:none} td {border: 0.5pt solid #c0c0c0}</style>';
+    a.href = data_type + ',' + encodeURIComponent('<html><head>' + css_html + '</head><body>'+ table_html +'</body></html>');
+    a.download = 'deviceMis.xls';
+    a.click();
+    e.preventDefault();
+});
+}
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfOsF1RlTvaLL35eKL6FBg0LvndiWQdBU&libraries=places&callback=initMap">
     </script>
+
+
