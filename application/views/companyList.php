@@ -83,17 +83,17 @@
                           <td><?php echo $list['state']; ?></td>
                           <td>
                             <div class="row">
-                              <a href="#" class="icon icon-box-info " style="margin-right: 5%;">
+                              <a href="<?php echo base_url('CompanyProfile/profile/'); ?><?php echo $list['company_code']; ?>" class="icon icon-box-info " style="margin-right: 5%;">
                               <span class="mdi mdi-eye"></span>
                               </a>
 
-                              <a href="#" class="icon icon-box-success " style="margin-right: 5%;">
+                              <a id="<?php echo $list['company_code']; ?>" onclick="editCompany(this.id);" class="icon icon-box-success " data-toggle="modal" data-target="#companyEdit" style="margin-right: 5%;cursor: pointer;">
                                 <span class="mdi mdi-grease-pencil"></span>
                               </a>
 
-                              <a href="#" class="icon icon-box-danger ">
+                              <!-- <a href="#" class="icon icon-box-danger ">
                                 <span class="mdi mdi-block-helper"></span>
-                              </a>
+                              </a> -->
                             </div>
                           </td>
                       </tr>
@@ -128,7 +128,7 @@
       </div>
       <div class="modal-body">
         <div class="content-area">
-          <form method="POST" action="#" enctype="multipart/form-data">
+          <form method="POST" action="<?php echo base_url('Company/addCompanydata'); ?>" enctype="multipart/form-data">
             <div class="col-lg-12">
               <div class="row">
                 <div class="col-md-6">
@@ -141,7 +141,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Company Logo</label>
-                    <input type="file" name="company_logo" id="company_logo" class="form-control" required>
+                    <input type="file" name="company_logo" id="company_logo" class="form-control">
                   </div>
                 </div>
 
@@ -210,16 +210,69 @@
 
               </div>
             </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
           </form>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
       </div>
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="companyEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Company Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="editdetails">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<?php 
+    if($this->session->flashdata('success')!=null)
+    {
+        ?>
+        <script type="text/javascript">
+            swal('success','<?php echo $this->session->flashdata("success") ?>','success');
+        </script>
+        <?php
+        $this->session->set_flashdata('success',null);
+    }
+    if($this->session->flashdata('error')!=null)
+    {
+        ?>
+        <script type="text/javascript">
+            swal('error','<?php echo $this->session->flashdata("error") ?>','error');
+        </script>
+        <?php
+        $this->session->set_flashdata('error',null);
+    }
+?>
+<script type="text/javascript">
+  function editCompany(company_code)
+  {
+    debugger
+    $.ajax({
+          url: '<?php echo base_url(); ?>Company/editCompany',
+          type: 'POST',
+          data: {company_code: company_code},
+          success:function(data)
+          {
+            $("#editdetails").html(data);
+          }
+    });
+  }
+</script>
+
 <script type="text/javascript">
     function export_report()
     {

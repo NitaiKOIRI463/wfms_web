@@ -30,8 +30,8 @@ class MY_Controller extends CI_Controller
     ));
 
     $response = curl_exec($curl);
-	     echo '<pre>';
-      print_r($response);die;
+	     // echo '<pre>';
+      // print_r($response);die;
     $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
     // if ($httpCode == 200) {
