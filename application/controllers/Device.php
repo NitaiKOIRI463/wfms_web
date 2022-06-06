@@ -10,6 +10,13 @@
 
 		public function index()
 		{
+			$api = 'Device_list/get_deviceList';
+			$data = '';
+			$method = 'post';
+			$result = $this->CallAPI($api,$data,$method);
+			$d['device_list'] = $result['data'];
+			echo "<pre>";
+			print_r($d['device_list']);
 			$d['v'] = 'deviceList';
 			$this->load->view('templates',$d);
 		}

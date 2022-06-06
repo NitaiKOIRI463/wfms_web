@@ -28,7 +28,7 @@
       <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Device List</h4>
+            <h4 class="card-title">Device List </h4>
             <div class="col-md-12">
               <div class="row">
                 <div class="col-md-4">
@@ -67,15 +67,20 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td style="width: 1%;"> 1 </td>
-                    <td> Iotas </td>
-                    <td> 9865434567 </td>
-                    <td> Flow </td>
-                    <td> 89765667789988 </td>
-                    <td> Ranchi Jharkhand </td>
-                    <td> 04-06-2022 </td>
-                    <td>
+                  <?php
+                    if(!empty($com_list)) 
+                    {
+                      foreach ($com_list as $key => $list)
+                       {
+                        ?>
+                        <tr>
+                          <td style="width: 1%;"><?php echo ($key+1); ?> </td>
+                          <td><?php echo $list['company_name']; ?></td>
+                          <td><?php echo $list['contact_person']; ?></td>
+                          <td><?php echo $list['contact_no']; ?> </td>
+                          <td><?php echo $list['address']; ?></td>
+                          <td><?php echo $list['city']; ?></td>
+                          <td><?php echo $list['state']; ?></td>
                         <div class="row">
                           <a href="<?php echo base_url('Device/DeviceProfile'); ?>" class="icon icon-box-info " style="margin-right: 5%;">
                           <span class="mdi mdi-eye"></span>
@@ -91,30 +96,14 @@
                         </div>
                     </td>
                   </tr>
-                  <tr>
-                    <td style="width: 1%;"> 1 </td>
-                    <td> Iotas </td>
-                    <td> 9865434567 </td>
-                    <td> Flow </td>
-                    <td> 89765667789988 </td>
-                    <td> Ranchi Jharkhand </td>
-                    <td> 04-06-2022 </td>
-                    <td>
-                        <div class="row">
-                          <a href="#" class="icon icon-box-info " style="margin-right: 5%;">
-                          <span class="mdi mdi-eye"></span>
-                          </a>
-
-                          <a href="#" class="icon icon-box-success " style="margin-right: 5%;">
-                            <span class="mdi mdi-grease-pencil"></span>
-                          </a>
-
-                          <a href="#" class="icon icon-box-danger ">
-                            <span class="mdi mdi-block-helper"></span>
-                          </a>
-                        </div>
-                    </td>
-                  </tr>
+                  <?php
+                      }
+                    } else{
+                        ?>
+                        <tr><td colspan="8" style="text-align: center;"> No Record Found </td></tr>
+                      <?php
+                    }
+                  ?>
                 </tbody>
               </table>
             </div>

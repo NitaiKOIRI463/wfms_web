@@ -49,7 +49,7 @@
 							'logged_in' => TRUE
 						);
 
-					$this->session->set_userdata($logged_in_sess);
+					$this->session->set_userdata($logged_in_session);
 	                redirect('CompanyDashboard','refresh');
 				}
 
