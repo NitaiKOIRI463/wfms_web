@@ -42,7 +42,7 @@
                       <i class="mdi mdi-home-outline"></i>
                   </a>
 
-                  <a href="#" class="btn btn-warning btn-icon-text" style="float: right;margin-left: 1%;margin-top: 1%;">
+                  <a href="#" class="btn btn-warning btn-icon-text" onclick="export_report()" style="float: right;margin-left: 1%;margin-top: 1%;">
                       <i class="mdi mdi-file-excel"></i> Export 
                   </a>
 
@@ -53,7 +53,7 @@
               </div>
             </div>
             <div class="table-responsive" style="max-height: 300%;overflow: auto;">
-              <table class="table table-dark" style="text-align: center;">
+              <table class="table table-dark" id="deviceList" style="text-align: center;">
                 <thead>
                   <tr>
                     <th> Sl. No. </th>
@@ -61,26 +61,29 @@
                     <th> Device Id </th>
                     <th> Device Type </th>
                     <th> IMEI </th>
+                    <th> City </th>
                     <th> Address </th>
-                    <th> Date </th>
+                    <th> Date Of Installation </th>
                     <th> Action </th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php
-                    if(!empty($com_list)) 
+                    if(!empty($device_list)) 
                     {
-                      foreach ($com_list as $key => $list)
+                      foreach ($device_list as $key => $list)
                        {
                         ?>
                         <tr>
-                          <td style="width: 1%;"><?php echo ($key+1); ?> </td>
+                          <td><?php echo ($key+1); ?> </td>
                           <td><?php echo $list['company_name']; ?></td>
-                          <td><?php echo $list['contact_person']; ?></td>
-                          <td><?php echo $list['contact_no']; ?> </td>
-                          <td><?php echo $list['address']; ?></td>
+                          <td><?php echo $list['device_id']; ?></td>
+                          <td><?php echo $list['device_type']; ?> </td>
+                          <td><?php echo $list['imei_no']; ?></td>
                           <td><?php echo $list['city']; ?></td>
-                          <td><?php echo $list['state']; ?></td>
+                          <td><?php echo $list['address']; ?></td>
+                          <td><?php echo $list['date_of_installation']; ?></td>
+                          <td>
                         <div class="row">
                           <a href="<?php echo base_url('Device/DeviceProfile'); ?>" class="icon icon-box-info " style="margin-right: 5%;">
                           <span class="mdi mdi-eye"></span>
@@ -220,3 +223,20 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+    function export_report()
+    {
+        $(function() {
+        var a = document.createElement('a');
+        var data_type = 'data:application/vnd.ms-excel;charset=utf-8';
+        var table_html = $('#deviceList')[0].outerHTML;
+        table_html = table_html.replace(/<tfoot[\s\S.]*tfoot>/gmi, '');
+        var css_html = '<style> .abc {display:none} td {border: 0.5pt solid #c0c0c0}</style>';
+        a.href = data_type + ',' + encodeURIComponent('<html><head>' + css_html + '</head><body>'+ table_html +'</body></html>');
+        a.download = 'DeviceList.xls';
+        a.click();
+        e.preventDefault();
+    });
+}
+</script>
