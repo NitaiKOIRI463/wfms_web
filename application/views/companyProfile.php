@@ -22,7 +22,7 @@
                     <span>Company Name :</span>
                   </div>
                   <div class="col-md-3">
-                    <span>Iotas</span>
+                    <span><?php echo $profileData[0]['company_name']; ?></span>
                   </div>
 
                   <div class="col-md-3">
@@ -30,7 +30,7 @@
                   </div>
                   <div class="col-md-3" style="margin-top: -14px;">
                     <div class="preview-thumbnail">
-                          <img src="<?php echo base_url(); ?>assets/images/faces/face8.jpg" alt="image" class="rounded-circle" style="max-height: 0%;max-width: 20%;">
+                          <img src="<?php echo $profileData[0]['logo']; ?>" alt="image" class="rounded-circle" style="max-height: 0%;max-width: 20%;">
                     </div>
                   </div>
 
@@ -38,42 +38,42 @@
                     <span>Company Website :</span>
                   </div>
                   <div class="col-md-3 pt-3">
-                    <span>iotassolution.com</span>
+                    <span><?php echo $profileData[0]['website']; ?></span>
                   </div>
 
                   <div class="col-md-3 pt-3">
                     <span>Contatct Person :</span>
                   </div>
                   <div class="col-md-3 pt-3">
-                    <span>Nitai</span>
+                    <span><?php echo $profileData[0]['contact_person']; ?></span>
                   </div>
 
                   <div class="col-md-3 pt-3">
                     <span>Registration Date :</span>
                   </div>
                   <div class="col-md-3 pt-3">
-                    <span>04-06-2022</span>
+                    <span><?php echo date('d-m-Y',strtotime($profileData[0]['registration_date'])); ?></span>
                   </div>
 
                   <div class="col-md-3 pt-3">
                     <span>State :</span>
                   </div>
                   <div class="col-md-3 pt-3">
-                    <span>Jharkhand</span>
+                    <span><?php echo $profileData[0]['state_name']; ?></span>
                   </div>
 
                   <div class="col-md-3 pt-3">
                     <span>City :</span>
                   </div>
                   <div class="col-md-3 pt-3">
-                    <span>Ranchi</span>
+                    <span><?php echo $profileData[0]['city']; ?></span>
                   </div>
 
                   <div class="col-md-3 pt-3">
                     <span>Address :</span>
                   </div>
                   <div class="col-md-3 pt-3">
-                    <span>Ranchi Jharkhand</span>
+                    <span><?php echo $profileData[0]['address']; ?></span>
                   </div>
 
                 </div>
@@ -103,30 +103,45 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td style="width: 1%;"> 1 </td>
-                    <td> 87786756467987 </td>
-                    <td> Flow </td>
-                    <td> 456789876556 </td>
-                    <td> Ranchi Jharkhand</td>
-                    <td> 04-June-2022 </td>
-                    <td>
-                        <img src="<?php echo base_url('assets/red.png'); ?>" style="height: 0%;width: 15%">
-                        <p>Deactive</p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="width: 1%;"> 1 </td>
-                    <td> 87786756467987 </td>
-                    <td> Flow </td>
-                    <td> 456789876556 </td>
-                    <td> Ranchi Jharkhand</td>
-                    <td> 04-June-2022 </td>
-                    <td>
-                        <img src="<?php echo base_url('assets/green.png'); ?>" style="height: 0%;width: 15%">
-                        <p>Active</p>
-                    </td>
-                  </tr>
+                  <?php 
+
+                    if(!empty($device_list))
+                    {
+                      foreach ($device_list as $key => $value) {
+                          
+                          ?>
+                          <tr>
+                              <td style="width: 1%;"><?php echo ($key+1); ?> </td>
+                              <td> <?php echo $value['device_id'];  ?> </td>
+                              <td> <?php echo $value['device_type'];  ?> </td>
+                              <td> <?php echo $value['imei_no'];  ?></td>
+                              <td> <?php echo $value['address'];  ?></td>
+                              <td> <?php echo date('d-m-Y',strtotime($value['date_of_installation']));  ?> </td>
+                              <td>
+                                <?php
+                                    if($value['address']<=5)
+                                    {
+                                      ?>
+                                        <img src="<?php echo base_url('assets/green.png'); ?>" style="height: 0%;width: 15%">
+                                        <p>Active</p>
+                                      <?php
+                                    }else
+                                    {
+                                      ?>
+                                        <img src="<?php echo base_url('assets/red.png'); ?>" style="height: 0%;width: 15%">
+                                        <p>Deactive</p>
+                                      <?php
+                                    }
+                                  ?>
+                                  
+                              </td>
+                            </tr>
+                          <?php
+
+                      }
+                    }
+
+                   ?>
                 </tbody>
               </table>
             </div>
