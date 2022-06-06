@@ -13,7 +13,7 @@ class MY_Controller extends CI_Controller
   public function CallAPI($api, $data, $method) {
     $curl = curl_init();
     curl_setopt_array($curl, array(
-      CURLOPT_URL => "http://localhost/E-OfficeApi/api/".$api,
+      CURLOPT_URL => "http://localhost/wfms_api/api/".$api,
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => "",
       CURLOPT_MAXREDIRS => 10,
